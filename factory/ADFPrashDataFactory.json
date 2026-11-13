@@ -1,0 +1,12 @@
+{
+	"name": "ADFPrashDataFactory",
+	"properties": {
+		"globalParameters": {
+			"email_recepient": {
+				"type": "string",
+				"value": "suman.ravuru@gmail.com"
+			}
+		}
+	},
+	"location": "southeastasia"
+}

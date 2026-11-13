@@ -30,11 +30,47 @@
 					},
 					"firstRowOnly": false
 				}
+			},
+			{
+				"name": "Prepare email body header",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "body_header",
+					"value": "Ingestion and Transformation process is completed for caresync project."
+				}
+			},
+			{
+				"name": "Prepare email body footer",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "body_footer",
+					"value": "For any support please reach out to prash"
+				}
 			}
 		],
 		"parameters": {
 			"adf_run_id": {
 				"type": "string"
+			}
+		},
+		"variables": {
+			"body_header": {
+				"type": "String"
+			},
+			"body_footer": {
+				"type": "String"
 			}
 		},
 		"annotations": []

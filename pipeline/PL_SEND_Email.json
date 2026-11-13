@@ -70,7 +70,38 @@
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "email_subject",
-					"value": "DEV | SUCCESS | CARESYNC"
+					"value": {
+						"value": "@{pipeline().globalParameters.env} | SUCCESS | CARESYNC MASTER RUN",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "check overall fail count",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "select count(*) from ctrl.audit_log where adf_run_id_id='@{pipeline().parameters.adf_run_id}'\nand status!='SUCCESS'",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					}
 				}
 			}
 		],

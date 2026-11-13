@@ -134,6 +134,35 @@
 								}
 							}
 						}
+					},
+					{
+						"name": "Send Email",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Silver To Gold",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "PL_SEND_Email",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"adf_run_id": {
+									"value": "@pipeline().RunId",
+									"type": "Expression"
+								}
+							}
+						}
 					}
 				],
 				"policy": {
@@ -143,7 +172,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/PL_SourceToSilver_Main')]",
-				"[concat(variables('factoryId'), '/pipelines/PL_SilverToGold')]"
+				"[concat(variables('factoryId'), '/pipelines/PL_SilverToGold')]",
+				"[concat(variables('factoryId'), '/pipelines/PL_SEND_Email')]"
 			]
 		},
 		{
@@ -1415,6 +1445,37 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/AzureSqlTable1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TGR_Caresync_Daily')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "PL_Master",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2026-11-13T10:09:00",
+						"timeZone": "UTC-11",
+						"schedule": {}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/PL_Master')]"
 			]
 		}
 	]

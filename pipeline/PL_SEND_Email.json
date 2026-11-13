@@ -58,6 +58,20 @@
 					"variableName": "body_footer",
 					"value": "For any support please reach out to prash"
 				}
+			},
+			{
+				"name": "Prepare email subject",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "email_subject",
+					"value": "DEV | SUCCESS | CARESYNC"
+				}
 			}
 		],
 		"parameters": {
@@ -70,6 +84,9 @@
 				"type": "String"
 			},
 			"body_footer": {
+				"type": "String"
+			},
+			"email_subject": {
 				"type": "String"
 			}
 		},

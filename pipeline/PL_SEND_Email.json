@@ -62,7 +62,14 @@
 			{
 				"name": "Prepare email subject",
 				"type": "SetVariable",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "check overall fail count",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"secureOutput": false,
 					"secureInput": false
@@ -71,7 +78,7 @@
 				"typeProperties": {
 					"variableName": "email_subject",
 					"value": {
-						"value": "@{pipeline().globalParameters.env} | SUCCESS | CARESYNC MASTER RUN",
+						"value": "@{pipeline().globalParameters.env} | \n@{if(greater(activity('check overall fail count').output.firstRow.count,0), 'FAILED','SUCCESS' )}\n | CARESYNC MASTER RUN",
 						"type": "Expression"
 					}
 				}
@@ -103,6 +110,30 @@
 						"type": "DatasetReference"
 					}
 				}
+			},
+			{
+				"name": "prepare logic apps body",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Read All tables status",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "prepare_logic_apps_body",
+					"value": {
+						"value": "{\n\"subject\" : \"@{variables('email_subject')}\",\n\"email_recepients\" : \"@{pipeline().globalParameters.email_recepient}\",\n\"body_header\" : \"@{variables('body_header')}\",\n\"body_footer\" : \"@{variables('body_footer')}\",\n\"status_table\" : \n}",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -118,6 +149,9 @@
 				"type": "String"
 			},
 			"email_subject": {
+				"type": "String"
+			},
+			"prepare_logic_apps_body": {
 				"type": "String"
 			}
 		},
